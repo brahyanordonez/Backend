@@ -1,38 +1,18 @@
 const express = require("express")
+const routerApi = require("./routes")
+const cors = require("cors")
+
 const app = express();
 const port = 3000;
 
+app.use(express.json()); // Middleware para parsear el body a JSON
+app.use(cors()); // Middleware para permitir peticiones de otros dominios
 
 app.get("/", (req, res) => {
     res.send("Hello World!");
 });
 
-app.get("/nueva-ruta", (req, res) => {
-    res.send("Nueva ruta")
-})
-
-app.get("/tickets", (req, res) => {
-    res.json({
-        title: "Problemas de ingreso",
-        message: "Tests de error"
-    })
-})
-
-// Dentro de endpoint nosotros tenemos lo que llammos REST: Representational State Transfer
-// Get: Obtener
-// Put: Modificar/Actualizar todos los parametros
-// Patch: Modificar/Actualizar es parcial
-// Post: Crear
-// Delete: Eliminar
-
-app.get("/users/:id", (req, res) => {
-    const {id} = req.params;
-    res.json({
-        id,
-        title: "Problemas de ingreso",
-        message: "Tests de error"
-    })
-})
+routerApi(app);
 
 app.listen(port, () => {
     console.log(`Escuchando en http://localhost:${port}`);

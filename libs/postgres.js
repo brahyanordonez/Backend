@@ -14,4 +14,4 @@ async function getConection() {
     return client
 }
 
-export default getConection;
+module.exports = getConection;
