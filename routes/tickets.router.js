@@ -6,7 +6,6 @@ const service = new TicketsService();
 
 router.get("/", async (req, res) => {
   const tickets = await service.find();
-  console.log(tickets);
   res.json(tickets);
 });
 
@@ -33,5 +32,14 @@ router.delete("/:id", async (req, res) => {
     message: "eliminado",
   });
 });
+
+//obtener los tickets de un usuario
+
+router.get("/user/:id", async (req, res) => {
+  const { id } = req.params;
+  const ticket = await service.findUserTickets(id);
+  res.json(ticket);
+}
+);
 
 module.exports = router;

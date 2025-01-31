@@ -1,35 +1,40 @@
-class TicketsService {
-  constructor() {
-    this.tickets = [];
-    this.generateTicketTestData();
-  }
+const getConection = require("../libs/postgres");
 
-  generateTicketTestData() {
-    this.tickets = [
-      { title: "Problemas de ingreso", message: "Tests de error" },
-      { title: "Problemas de ingreso", message: "Tests de error" },
-      { title: "Problemas de ingreso", message: "Tests de error" },
-      { title: "Problemas de ingreso", message: "Tests de error" },
-      { title: "Problemas de ingreso", message: "Tests de error" },
-    ];
-  }
+class TicketsService {
+  constructor() {}
 
   async create(data) {
-    this.tickets.push(data);
+    const client = await getConection();
+    const res = await client.query(
+      `INSERT INTO tickets (user_id, title, message) VALUES (${data.user_id}, '${data.title}', '${data.message}')`
+    );
     return data;
   }
 
   async find() {
-    return this.tickets;
+    const client = await getConection();
+    const res = await client.query("SELECT * FROM tickets");
+    return res.rows;
   }
 
   async findOne(id) {
-    return this.tickets[id];
+    const client = await getConection();
+    const res = await client.query(`SELECT * FROM tickets WHERE id = ${id}`);
+    return res.rows[0];
   }
 
   async delete(id) {
-    this.tickets.splice(id, 1);
+    const client = await getConection();
+    const res = await client.query(`DELETE FROM tickets WHERE id = ${id}`);
     return id;
+  }
+
+  async findUserTickets(id) {
+    const client = await getConection();
+    const res = await client.query(
+      `SELECT * FROM tickets WHERE user_id = ${id}`
+    );
+    return res.rows;
   }
 }
 

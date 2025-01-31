@@ -1,30 +1,31 @@
-class UserService {
-  constructor() {
-    this.users = [];
-    this.generateUserTestData();
-  }
+const getConection = require("../libs/postgres");
 
-  generateUserTestData() {
-    this.users = [
-      { name: "Daniel", email: "daniel@example.com", password: "1234" },
-    ];
-  }
+class UserService {
+  constructor() {}
 
   async create(data) {
-    this.users.push(data);
+    const client = await getConection();
+    const res = await client.query(
+      `INSERT INTO users (name, email) VALUES ('${data.name}', '${data.email}')`
+    );
     return data;
   }
 
   async find() {
-    return this.users;
+    const client = await getConection();
+    const res = await client.query("SELECT * FROM users");
+    return res.rows;
   }
 
   async findOne(id) {
-    return this.users[id];
+    const client = await getConection();
+    const res = await client.query(`SELECT * FROM users WHERE id = ${id}`);
+    return res.rows[0];
   }
 
   async delete(id) {
-    this.users.splice(id, 1);
+    const client = await getConection();
+    const res = await client.query(`DELETE FROM users WHERE id = ${id}`);
     return id;
   }
 }
